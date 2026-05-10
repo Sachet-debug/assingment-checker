@@ -1,0 +1,126 @@
+version: 2.1
+
+jobs:
+
+  # ── JOB 1: Run Tests ──────────────────────────
+  test:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: pytest tests/ -v
+
+  # ── JOB 2: Check Submission ───────────────────
+  check-submission:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
+      - run:
+          name: Run Assignment Checker
+          command: python checker/generate_report.py
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dashboard/results.json
+
+  # ── JOB 3: Build & Push Docker Image ──────────
+  build-and-push:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          docker_layer_caching: false
+      - run:
+          name: Build Docker image
+          command: |
+            IMAGE_NAME="$DOCKER_USERNAME/assignment-checker"
+            docker build -t "$IMAGE_NAME:latest" .
+      - run:
+          name: Push to Docker Hub
+          command: |
+            IMAGE_NAME="$DOCKER_USERNAME/assignment-checker"
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            docker push "$IMAGE_NAME:latest"
+
+  # ── JOB 4: Deploy to Render ───────────────────
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Deploy to Render
+          command: curl -X POST $RENDER_DEPLOY_HOOK_URL
+
+  # ── JOB 5: Send Slack Notification ───────────
+  notify:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Send Slack Notification
+          command: |
+            pip install requests -q
+            python -c "
+            import json, requests, os
+
+            with open('dashboard/results.json') as f:
+                data = json.load(f)
+
+            r = data.get('latest', {})
+            checks = r.get('checks', [])
+            breakdown = '\n'.join([
+                ('✅ ' if c['passed'] else '❌ ') + c['name']
+                for c in checks
+            ])
+
+            msg = {
+                'text': f'''🎓 *Assignment Checker Result*
+
+📁 *File:* {r.get('file', 'N/A')}
+📝 *Type:* {r.get('type', 'N/A')}
+⭐ *Score:* {r.get('score', 0)}/{r.get('max_score', 10)}
+{'✅' if r.get('status') == 'PASS' else '❌'} *Status:* {r.get('status', 'N/A')}
+
+*Score Breakdown:*
+{breakdown}
+
+🕐 *Checked at:* {r.get('timestamp', 'N/A')}
+🔗 *Dashboard:* {os.environ.get('RENDER_URL', 'https://your-app.onrender.com')}'''
+            }
+
+            requests.post(os.environ['SLACK_WEBHOOK_URL'], json=msg)
+            print('Slack notification sent!')
+            "
+
+# ── WORKFLOW ───────────────────────────────────
+workflows:
+  assignment-pipeline:
+    jobs:
+      - test
+      - check-submission:
+          requires:
+            - test
+      - build-and-push:
+          requires:
+            - check-submission
+      - deploy:
+          requires:
+            - build-and-push
+      - notify:
+          requires:
+            - deploy
