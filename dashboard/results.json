@@ -1,46 +1,104 @@
 {
   "latest": {
-    "file": "assignment.py",
-    "type": "Python Code",
+    "file": "assingment.pdf",
+    "type": "PDF",
     "checks": [
       {
-        "name": "File is not empty",
+        "name": "File is readable",
         "passed": true,
         "points": 2,
-        "message": "File has 41 words of code"
+        "message": "PDF opened successfully"
       },
       {
-        "name": "Valid Python syntax",
+        "name": "Minimum page count",
         "passed": true,
         "points": 2,
-        "message": "No syntax errors found"
+        "message": "PDF has 2 pages"
       },
       {
-        "name": "Code runs without errors",
+        "name": "Word count sufficient",
         "passed": false,
         "points": 0,
-        "message": "Code took too long to run (timeout 10s)"
+        "message": "Only 151 words \u2014 minimum 200 required"
       },
       {
-        "name": "Required functions present",
-        "passed": false,
-        "points": 0,
-        "message": "Missing functions: main"
+        "name": "Required keywords found",
+        "passed": true,
+        "points": 2,
+        "message": "Found: introduction, conclusion, references"
       },
       {
-        "name": "Has comments/documentation",
-        "passed": false,
-        "points": 0,
-        "message": "Not enough comments \u2014 add at least 2 comments"
+        "name": "References section present",
+        "passed": true,
+        "points": 2,
+        "message": "References section found"
       }
     ],
-    "score": 4,
+    "score": 8,
     "max_score": 10,
-    "status": "FAIL",
-    "timestamp": "10 May 2026 04:35 PM",
-    "filename": "assignment.py"
+    "status": "PASS",
+    "timestamp": "10 May 2026 06:25 PM",
+    "filename": "assingment.pdf"
   },
   "results": [
+    {
+      "file": "assingment.pdf",
+      "type": "PDF",
+      "checks": [
+        {
+          "name": "File is readable",
+          "passed": true,
+          "points": 2,
+          "message": "PDF opened successfully"
+        },
+        {
+          "name": "Minimum page count",
+          "passed": true,
+          "points": 2,
+          "message": "PDF has 2 pages"
+        },
+        {
+          "name": "Word count sufficient",
+          "passed": false,
+          "points": 0,
+          "message": "Only 151 words \u2014 minimum 200 required"
+        },
+        {
+          "name": "Required keywords found",
+          "passed": true,
+          "points": 2,
+          "message": "Found: introduction, conclusion, references"
+        },
+        {
+          "name": "References section present",
+          "passed": true,
+          "points": 2,
+          "message": "References section found"
+        }
+      ],
+      "score": 8,
+      "max_score": 10,
+      "status": "PASS",
+      "timestamp": "10 May 2026 06:25 PM",
+      "filename": "assingment.pdf"
+    },
+    {
+      "file": "assingment.pdf",
+      "type": "PDF",
+      "checks": [
+        {
+          "name": "File is readable",
+          "passed": false,
+          "points": 0,
+          "message": "Could not open PDF: EOF marker not found"
+        }
+      ],
+      "score": 0,
+      "max_score": 10,
+      "status": "FAIL",
+      "timestamp": "10 May 2026 06:18 PM",
+      "filename": "assingment.pdf"
+    },
     {
       "file": "assignment.py",
       "type": "Python Code",
