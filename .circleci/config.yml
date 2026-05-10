@@ -33,6 +33,7 @@ jobs:
             - dashboard/results.json
 
   # ── JOB 3: Build & Push Docker Image ──────────
+  # ── JOB 3: Build & Push Docker Image ──────────
   build-and-push:
     docker:
       - image: cimg/base:stable
@@ -43,16 +44,11 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
-          name: Build Docker image
+          name: Build Push Docker Image
           command: |
-            IMAGE_NAME="$DOCKER_USERNAME/assignment-checker"
-            docker build -t "$IMAGE_NAME:latest" .
-      - run:
-          name: Push to Docker Hub
-          command: |
-            IMAGE_NAME="$DOCKER_USERNAME/assignment-checker"
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            docker push "$IMAGE_NAME:latest"
+            docker build -t "$DOCKER_USERNAME/assignment-checker:latest" .
+            docker push "$DOCKER_USERNAME/assignment-checker:latest"
 
   # ── JOB 4: Deploy to Render ───────────────────
   deploy:
