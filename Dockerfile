@@ -2,22 +2,17 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install curl for healthcheck
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first
 COPY requirements.txt .
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy everything
+# Copy everything including results.json
 COPY . .
 
-# Make sure results.json exists
-RUN mkdir -p dashboard && \
-    echo '{"latest":{"file":"No submissions yet","type":"N/A","score":0,"max_score":10,"status":"N/A","timestamp":"N/A","checks":[]},"results":[]}' \
-    > dashboard/results.json
+# Make sure dashboard folder exists
+RUN mkdir -p dashboard
 
 EXPOSE 5000
 

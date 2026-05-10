@@ -27,12 +27,14 @@ jobs:
       - run:
           name: Run Assignment Checker
           command: python checker/generate_report.py
+      - run:
+          name: Show results.json
+          command: cat dashboard/results.json
       - persist_to_workspace:
           root: .
           paths:
             - dashboard/results.json
 
-  # ── JOB 3: Build & Push Docker Image ──────────
   # ── JOB 3: Build & Push Docker Image ──────────
   build-and-push:
     docker:
@@ -44,7 +46,10 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
-          name: Build Push Docker Image
+          name: Verify results.json exists
+          command: cat dashboard/results.json
+      - run:
+          name: Build and Push Docker image
           command: |
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             docker build -t "$DOCKER_USERNAME/assignment-checker:latest" .
@@ -57,7 +62,8 @@ jobs:
     steps:
       - run:
           name: Deploy to Render
-          command: curl -X POST $RENDER_DEPLOY_HOOK_URL
+          command: |
+            curl -X POST $RENDER_DEPLOY_HOOK_URL
 
   # ── JOB 5: Send Slack Notification ───────────
   notify:

@@ -4,27 +4,46 @@ import os
 
 app = Flask(__name__)
 
-RESULTS_FILE = os.path.join(os.path.dirname(__file__), "results.json")
+# Look for results.json in multiple locations
+RESULTS_PATHS = [
+    os.path.join(os.path.dirname(__file__), "results.json"),
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), "dashboard", "results.json"),
+    "/app/dashboard/results.json",
+]
 
 def load_results():
     """Load results from JSON file"""
-    if os.path.exists(RESULTS_FILE):
-        with open(RESULTS_FILE, "r") as f:
+    for path in RESULTS_PATHS:
+        if os.path.exists(path):
             try:
-                return json.load(f)
+                with open(path, "r") as f:
+                    data = json.load(f)
+                    if data.get("results"):
+                        return data
             except:
                 pass
-    return {"latest": {}, "results": []}
+
+    # Return default if no results found
+    return {
+        "latest": {
+            "file": "No submissions yet",
+            "type": "N/A",
+            "score": 0,
+            "max_score": 10,
+            "status": "N/A",
+            "timestamp": "N/A",
+            "checks": []
+        },
+        "results": []
+    }
 
 @app.route("/")
 def dashboard():
-    """Main dashboard page"""
     data = load_results()
     return render_template("index.html", data=data)
 
 @app.route("/api/results")
 def api_results():
-    """API endpoint for results"""
     return jsonify(load_results())
 
 @app.route("/health")
