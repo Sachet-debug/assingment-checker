@@ -72,40 +72,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install requests
+          command: pip install requests -q
+      - run:
           name: Send Slack Notification
-          command: |
-            pip install requests -q
-            python -c "
-            import json, requests, os
-
-            with open('dashboard/results.json') as f:
-                data = json.load(f)
-
-            r = data.get('latest', {})
-            checks = r.get('checks', [])
-            breakdown = '\n'.join([
-                ('✅ ' if c['passed'] else '❌ ') + c['name']
-                for c in checks
-            ])
-
-            msg = {
-                'text': f'''🎓 *Assignment Checker Result*
-
-📁 *File:* {r.get('file', 'N/A')}
-📝 *Type:* {r.get('type', 'N/A')}
-⭐ *Score:* {r.get('score', 0)}/{r.get('max_score', 10)}
-{'✅' if r.get('status') == 'PASS' else '❌'} *Status:* {r.get('status', 'N/A')}
-
-*Score Breakdown:*
-{breakdown}
-
-🕐 *Checked at:* {r.get('timestamp', 'N/A')}
-🔗 *Dashboard:* {os.environ.get('RENDER_URL', 'https://your-app.onrender.com')}'''
-            }
-
-            requests.post(os.environ['SLACK_WEBHOOK_URL'], json=msg)
-            print('Slack notification sent!')
-            "
+          command: python notify.py
 
 # ── WORKFLOW ───────────────────────────────────
 workflows:
