@@ -1,46 +1,87 @@
 {
   "latest": {
-    "file": "assingment.pdf",
-    "type": "PDF",
+    "file": "good_devops_project.py",
+    "type": "Python Code",
     "checks": [
       {
-        "name": "File is readable",
+        "name": "File is not empty",
         "passed": true,
         "points": 2,
-        "message": "PDF opened successfully"
+        "message": "File has 72 words of code"
       },
       {
-        "name": "Minimum page count",
+        "name": "Valid Python syntax",
         "passed": true,
         "points": 2,
-        "message": "PDF has 2 pages"
+        "message": "No syntax errors found"
       },
       {
-        "name": "Word count sufficient",
+        "name": "Code runs without errors",
         "passed": false,
         "points": 0,
-        "message": "Only 151 words \u2014 minimum 200 required"
+        "message": "Code took too long to run (timeout 10s)"
       },
       {
-        "name": "Required keywords found",
-        "passed": true,
-        "points": 2,
-        "message": "Found: introduction, conclusion, references"
+        "name": "Required functions present",
+        "passed": false,
+        "points": 0,
+        "message": "Missing functions: main"
       },
       {
-        "name": "References section present",
+        "name": "Has comments/documentation",
         "passed": true,
         "points": 2,
-        "message": "References section found"
+        "message": "Found 3 comment lines"
       }
     ],
-    "score": 8,
+    "score": 6,
     "max_score": 10,
     "status": "PASS",
-    "timestamp": "10 May 2026 06:25 PM",
-    "filename": "assingment.pdf"
+    "timestamp": "11 May 2026 05:39 AM",
+    "filename": "good_devops_project.py"
   },
   "results": [
+    {
+      "file": "good_devops_project.py",
+      "type": "Python Code",
+      "checks": [
+        {
+          "name": "File is not empty",
+          "passed": true,
+          "points": 2,
+          "message": "File has 72 words of code"
+        },
+        {
+          "name": "Valid Python syntax",
+          "passed": true,
+          "points": 2,
+          "message": "No syntax errors found"
+        },
+        {
+          "name": "Code runs without errors",
+          "passed": false,
+          "points": 0,
+          "message": "Code took too long to run (timeout 10s)"
+        },
+        {
+          "name": "Required functions present",
+          "passed": false,
+          "points": 0,
+          "message": "Missing functions: main"
+        },
+        {
+          "name": "Has comments/documentation",
+          "passed": true,
+          "points": 2,
+          "message": "Found 3 comment lines"
+        }
+      ],
+      "score": 6,
+      "max_score": 10,
+      "status": "PASS",
+      "timestamp": "11 May 2026 05:39 AM",
+      "filename": "good_devops_project.py"
+    },
     {
       "file": "assingment.pdf",
       "type": "PDF",
