@@ -35,28 +35,7 @@ jobs:
           paths:
             - dashboard/results.json
 
-  # ── JOB 3: Commit Results to GitHub ───────────
-  # ── JOB 3: Commit Results to GitHub ───────────
-  # ── JOB 3: Commit Results to GitHub ───────────
-  commit-results:
-    docker:
-      - image: cimg/python:3.11
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Push results.json to GitHub
-          command: |
-            git config user.email "circleci@bot.com"
-            git config user.name "CircleCI Bot"
-            git fetch https://$GITHUB_TOKEN@github.com/Sachet-debug/assingment-checker.git main
-            git reset --soft FETCH_HEAD
-            git add dashboard/results.json
-            git diff --staged --quiet || git commit -m "Update results.json [skip ci]"
-            git push --force https://$GITHUB_TOKEN@github.com/Sachet-debug/assingment-checker.git HEAD:main
-
-  # ── JOB 4: Build & Push Docker Image ──────────
+  # ── JOB 3: Build & Push Docker Image ──────────
   build-and-push:
     docker:
       - image: cimg/base:stable
@@ -73,7 +52,7 @@ jobs:
             docker build -t "$DOCKER_USERNAME/assignment-checker:latest" .
             docker push "$DOCKER_USERNAME/assignment-checker:latest"
 
-  # ── JOB 5: Deploy to Render ───────────────────
+  # ── JOB 4: Deploy to Render ───────────────────
   deploy:
     docker:
       - image: cimg/base:stable
@@ -82,7 +61,7 @@ jobs:
           name: Deploy to Render
           command: curl -X POST $RENDER_DEPLOY_HOOK_URL
 
-  # ── JOB 6: Send Slack Notification ───────────
+  # ── JOB 5: Send Slack Notification ───────────
   notify:
     docker:
       - image: cimg/python:3.11
@@ -105,12 +84,9 @@ workflows:
       - check-submission:
           requires:
             - test
-      - commit-results:
-          requires:
-            - check-submission
       - build-and-push:
           requires:
-            - commit-results
+            - check-submission
       - deploy:
           requires:
             - build-and-push
