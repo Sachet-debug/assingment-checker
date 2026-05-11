@@ -36,6 +36,7 @@ jobs:
             - dashboard/results.json
 
   # ── JOB 3: Commit Results to GitHub ───────────
+  # ── JOB 3: Commit Results to GitHub ───────────
   commit-results:
     docker:
       - image: cimg/python:3.11
@@ -48,6 +49,7 @@ jobs:
           command: |
             git config user.email "circleci@bot.com"
             git config user.name "CircleCI Bot"
+            git pull --rebase https://$GITHUB_TOKEN@github.com/Sachet-debug/assingment-checker.git main
             git add dashboard/results.json
             git diff --staged --quiet || git commit -m "Update results.json [skip ci]"
             git push https://$GITHUB_TOKEN@github.com/Sachet-debug/assingment-checker.git HEAD:main
