@@ -50,7 +50,7 @@ jobs:
             git config user.name "CircleCI Bot"
             git add dashboard/results.json
             git diff --staged --quiet || git commit -m "Update results.json [skip ci]"
-            git push https://$GITHUB_TOKEN@github.com/$GITHUB_USERNAME/assignment-checker.git main
+            git push https://$GITHUB_TOKEN@github.com/Sachet-debug/assingment-checker.git HEAD:main
 
   # ── JOB 4: Build & Push Docker Image ──────────
   build-and-push:
