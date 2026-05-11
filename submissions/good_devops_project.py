@@ -22,7 +22,7 @@ VERSION = os.getenv("APP_VERSION", "1.0.0")
 def home():
     logging.info("Home endpoint accessed")
     return jsonify({
-        "message": "DevOps Assignment Project Running nicely",
+        "message": "DevOps Assignment Project Running sucessfully",
         "version": VERSION,
         "status": "success"
     })
