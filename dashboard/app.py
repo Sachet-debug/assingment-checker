@@ -1,29 +1,35 @@
 from flask import Flask, render_template, jsonify
 import json
 import os
+import requests
 
 app = Flask(__name__)
 
-# Look for results.json in multiple locations
-RESULTS_PATHS = [
-    os.path.join(os.path.dirname(__file__), "results.json"),
-    os.path.join(os.path.dirname(os.path.dirname(__file__)), "dashboard", "results.json"),
-    "/app/dashboard/results.json",
-]
+# GitHub raw URL for live results
+# Replace YOUR_USERNAME and YOUR_REPO
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/assignment-checker/main/dashboard/results.json"
+
+LOCAL_RESULTS = os.path.join(os.path.dirname(__file__), "results.json")
 
 def load_results():
-    """Load results from JSON file"""
-    for path in RESULTS_PATHS:
-        if os.path.exists(path):
-            try:
-                with open(path, "r") as f:
-                    data = json.load(f)
-                    if data.get("results"):
-                        return data
-            except:
-                pass
+    """Try GitHub first for live data, fallback to local"""
+    # Try fetching live from GitHub
+    try:
+        response = requests.get(GITHUB_RAW_URL, timeout=5)
+        if response.status_code == 200:
+            return response.json()
+    except Exception as e:
+        print(f"GitHub fetch failed: {e}")
 
-    # Return default if no results found
+    # Fallback to local file
+    if os.path.exists(LOCAL_RESULTS):
+        try:
+            with open(LOCAL_RESULTS, "r") as f:
+                return json.load(f)
+        except:
+            pass
+
+    # Default empty state
     return {
         "latest": {
             "file": "No submissions yet",

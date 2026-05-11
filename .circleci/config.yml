@@ -28,14 +28,31 @@ jobs:
           name: Run Assignment Checker
           command: python checker/generate_report.py
       - run:
-          name: Show results.json
+          name: Show results
           command: cat dashboard/results.json
       - persist_to_workspace:
           root: .
           paths:
             - dashboard/results.json
 
-  # ── JOB 3: Build & Push Docker Image ──────────
+  # ── JOB 3: Commit Results to GitHub ───────────
+  commit-results:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Push results.json to GitHub
+          command: |
+            git config user.email "circleci@bot.com"
+            git config user.name "CircleCI Bot"
+            git add dashboard/results.json
+            git diff --staged --quiet || git commit -m "Update results.json [skip ci]"
+            git push https://$GITHUB_TOKEN@github.com/$GITHUB_USERNAME/assignment-checker.git main
+
+  # ── JOB 4: Build & Push Docker Image ──────────
   build-and-push:
     docker:
       - image: cimg/base:stable
@@ -46,26 +63,22 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: false
       - run:
-          name: Verify results.json exists
-          command: cat dashboard/results.json
-      - run:
           name: Build and Push Docker image
           command: |
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             docker build -t "$DOCKER_USERNAME/assignment-checker:latest" .
             docker push "$DOCKER_USERNAME/assignment-checker:latest"
 
-  # ── JOB 4: Deploy to Render ───────────────────
+  # ── JOB 5: Deploy to Render ───────────────────
   deploy:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
           name: Deploy to Render
-          command: |
-            curl -X POST $RENDER_DEPLOY_HOOK_URL
+          command: curl -X POST $RENDER_DEPLOY_HOOK_URL
 
-  # ── JOB 5: Send Slack Notification ───────────
+  # ── JOB 6: Send Slack Notification ───────────
   notify:
     docker:
       - image: cimg/python:3.11
@@ -88,9 +101,12 @@ workflows:
       - check-submission:
           requires:
             - test
-      - build-and-push:
+      - commit-results:
           requires:
             - check-submission
+      - build-and-push:
+          requires:
+            - commit-results
       - deploy:
           requires:
             - build-and-push
