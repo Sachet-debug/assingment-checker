@@ -7,11 +7,29 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from checker.check_pdf import check_pdf
 from checker.check_code import check_code
 from checker.check_ieee import check_ieee
+from email_notify.send_email import send_email
 
 RESULTS_FILE = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),
     "dashboard", "results.json"
 )
+PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
+
+def load_env_file():
+    """Load simple KEY=VALUE pairs from .env for local runs."""
+    env_path = os.path.join(PROJECT_ROOT, ".env")
+    if not os.path.exists(env_path):
+        return
+
+    with open(env_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+load_env_file()
 
 def is_ieee_paper(filepath):
     """Quick check if PDF looks like IEEE paper"""
@@ -63,6 +81,7 @@ def detect_and_check(submissions_folder="submissions"):
 
     # Save results
     save_result(result)
+    notify_teacher_for_ieee(result)
 
     # Print summary
     print("\n" + "="*40)
@@ -79,6 +98,23 @@ def detect_and_check(submissions_folder="submissions"):
         print(f"\n⚠️  Missing sections: {', '.join(result['missing_sections'])}")
 
     return result
+
+def notify_teacher_for_ieee(result):
+    """Email IEEE paper results to the configured teacher address."""
+    if result.get("type") != "IEEE Research Paper":
+        return
+
+    teacher_email = (
+        os.environ.get("TEACHER_EMAIL")
+        or os.environ.get("RECIPIENT_EMAIL")
+    )
+    if not teacher_email:
+        print("Email skipped: set TEACHER_EMAIL or RECIPIENT_EMAIL")
+        return
+
+    sent = send_email(result, teacher_email)
+    if sent:
+        print(f"IEEE result email sent to {teacher_email}")
 
 def save_result(result):
     """Save result to results.json"""

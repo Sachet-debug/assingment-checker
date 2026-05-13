@@ -36,6 +36,11 @@ MISSING_SECTIONS_GAUGE = Gauge(
     "assignment_ieee_missing_sections",
     "Missing sections in latest IEEE paper"
 )
+MISSING_SECTION_INFO = Gauge(
+    "assignment_ieee_missing_section_info",
+    "Missing IEEE paper section by name",
+    ["section", "file", "status"]
+)
 
 def load_results():
     if os.path.exists(RESULTS_FILE):
@@ -75,8 +80,16 @@ def update_metrics(data):
         scores = [r.get("score", 0) for r in results]
         AVERAGE_SCORE.set(sum(scores) / len(scores))
 
-        missing = len(latest.get("missing_sections", []))
-        MISSING_SECTIONS_GAUGE.set(missing)
+        missing_sections = latest.get("missing_sections", [])
+        MISSING_SECTIONS_GAUGE.set(len(missing_sections))
+
+        MISSING_SECTION_INFO.clear()
+        for section in missing_sections:
+            MISSING_SECTION_INFO.labels(
+                section=section,
+                file=latest.get("file") or latest.get("filename", "N/A"),
+                status=latest.get("status", "N/A")
+            ).set(1)
 
     except Exception as e:
         print(f"Metrics error: {e}")

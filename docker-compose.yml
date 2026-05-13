@@ -8,6 +8,8 @@ services:
     environment:
       - GMAIL_ADDRESS=${GMAIL_ADDRESS:-}
       - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-}
+      - TEACHER_EMAIL=${TEACHER_EMAIL:-}
+      - RECIPIENT_EMAIL=${RECIPIENT_EMAIL:-}
       - JSONBIN_BIN_ID=${JSONBIN_BIN_ID:-}
     volumes:
       - ./dashboard/results.json:/app/dashboard/results.json

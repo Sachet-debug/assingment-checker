@@ -5,6 +5,22 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
+def load_env_file():
+    """Load simple KEY=VALUE pairs from .env for local runs."""
+    env_path = os.path.join(os.path.dirname(__file__), ".env")
+    if not os.path.exists(env_path):
+        return
+
+    with open(env_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+load_env_file()
+
 # Load results
 try:
     with open("dashboard/results.json") as f:
@@ -61,7 +77,7 @@ else:
         print(f"❌ Slack error: {response.status_code}")
 
 # Send email notification
-recipient = os.environ.get("RECIPIENT_EMAIL", "")
+recipient = os.environ.get("TEACHER_EMAIL") or os.environ.get("RECIPIENT_EMAIL", "")
 if recipient:
     sys.path.insert(0, "email_notify")
     from send_email import send_email
