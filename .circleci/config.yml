@@ -2,7 +2,6 @@ version: 2.1
 
 jobs:
 
-  # ── JOB 1: Run Tests ──────────────────────────
   test:
     docker:
       - image: cimg/python:3.11
@@ -15,7 +14,6 @@ jobs:
           name: Run tests
           command: pytest tests/ -v
 
-  # ── JOB 2: Check Submission ───────────────────
   check-submission:
     docker:
       - image: cimg/python:3.11
@@ -35,7 +33,6 @@ jobs:
           paths:
             - dashboard/results.json
 
-  # ── JOB 3: Build & Push Docker Image ──────────
   build-and-push:
     docker:
       - image: cimg/base:stable
@@ -52,7 +49,6 @@ jobs:
             docker build -t "$DOCKER_USERNAME/assignment-checker:latest" .
             docker push "$DOCKER_USERNAME/assignment-checker:latest"
 
-  # ── JOB 4: Deploy to Render ───────────────────
   deploy:
     docker:
       - image: cimg/base:stable
@@ -61,7 +57,6 @@ jobs:
           name: Deploy to Render
           command: curl -X POST $RENDER_DEPLOY_HOOK_URL
 
-  # ── JOB 5: Send Slack Notification ───────────
   notify:
     docker:
       - image: cimg/python:3.11
@@ -70,13 +65,12 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Install requests
+          name: Install dependencies
           command: pip install requests -q
       - run:
-          name: Send Slack Notification
+          name: Send Notifications
           command: python notify.py
 
-# ── WORKFLOW ───────────────────────────────────
 workflows:
   assignment-pipeline:
     jobs:

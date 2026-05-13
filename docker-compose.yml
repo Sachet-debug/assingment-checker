@@ -1,0 +1,44 @@
+services:
+
+  # ── Flask Dashboard ──────────────────────
+  dashboard:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - GMAIL_ADDRESS=${GMAIL_ADDRESS:-}
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD:-}
+      - JSONBIN_BIN_ID=${JSONBIN_BIN_ID:-}
+    volumes:
+      - ./dashboard/results.json:/app/dashboard/results.json
+    networks:
+      - monitoring
+
+  # ── Prometheus ───────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitoring
+    depends_on:
+      - dashboard
+
+  # ── Grafana ──────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_SECURITY_ADMIN_USER=admin
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+
+networks:
+  monitoring:
+    driver: bridge

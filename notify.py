@@ -1,6 +1,9 @@
 import json
 import requests
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(__file__))
 
 # Load results
 try:
@@ -13,11 +16,17 @@ except Exception as e:
 r = data.get("latest", {})
 checks = r.get("checks", [])
 
-# Build breakdown text
+# Build breakdown
 breakdown = "\n".join([
     ("✅ " if c["passed"] else "❌ ") + c["name"]
     for c in checks
 ]) if checks else "No checks found"
+
+# Missing sections warning
+missing_text = ""
+if r.get("missing_sections"):
+    missing = ", ".join(r["missing_sections"])
+    missing_text = f"\n⚠️ *Missing Sections:* {missing}"
 
 score = r.get("score", 0)
 max_score = r.get("max_score", 10)
@@ -31,21 +40,31 @@ message = {
         f"📁 *File:* {r.get('file', 'N/A')}\n"
         f"📝 *Type:* {r.get('type', 'N/A')}\n"
         f"⭐ *Score:* {score}/{max_score}\n"
-        f"{status_icon} *Status:* {status}\n\n"
+        f"{status_icon} *Status:* {status}"
+        f"{missing_text}\n\n"
         f"*Score Breakdown:*\n{breakdown}\n\n"
         f"🕐 *Checked at:* {r.get('timestamp', 'N/A')}\n"
-        f"🔗 *Dashboard:* {os.environ.get('RENDER_URL', 'https://your-app.onrender.com')}"
+        f"🔗 *Dashboard:* "
+        f"{os.environ.get('RENDER_URL', 'https://your-app.onrender.com')}"
     )
 }
 
-# Send to Slack
+# Send Slack notification
 webhook_url = os.environ.get("SLACK_WEBHOOK_URL", "")
-
 if not webhook_url:
     print("❌ SLACK_WEBHOOK_URL not set!")
 else:
     response = requests.post(webhook_url, json=message)
     if response.status_code == 200:
-        print("✅ Slack notification sent successfully!")
+        print("✅ Slack notification sent!")
     else:
-        print(f"❌ Slack error: {response.status_code} - {response.text}")
+        print(f"❌ Slack error: {response.status_code}")
+
+# Send email notification
+recipient = os.environ.get("RECIPIENT_EMAIL", "")
+if recipient:
+    sys.path.insert(0, "email_notify")
+    from send_email import send_email
+    send_email(r, recipient)
+else:
+    print("⚠️ RECIPIENT_EMAIL not set — skipping email")
