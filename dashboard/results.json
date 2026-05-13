@@ -1,6 +1,6 @@
 {
   "latest": {
-    "file": "ieee_missing_sections_demo.pdf",
+    "file": "demo2.pdf",
     "type": "IEEE Research Paper",
     "checks": [
       {
@@ -23,15 +23,15 @@
       },
       {
         "name": "Section: Methodology",
-        "passed": false,
-        "points": 0,
-        "message": "Methodology section MISSING \u274c"
+        "passed": true,
+        "points": 1,
+        "message": "Methodology section found \u2705"
       },
       {
         "name": "Section: Results",
-        "passed": false,
-        "points": 0,
-        "message": "Results section MISSING \u274c"
+        "passed": true,
+        "points": 1,
+        "message": "Results section found \u2705"
       },
       {
         "name": "Section: Discussion",
@@ -52,39 +52,124 @@
         "message": "References section MISSING \u274c"
       }
     ],
-    "score": 4,
+    "score": 6,
     "max_score": 10,
     "status": "FAIL",
     "missing_sections": [
-      "Methodology",
-      "Results",
       "Discussion",
       "References"
     ],
     "present_sections": [
       "Abstract",
       "Introduction",
+      "Methodology",
+      "Results",
       "Conclusion"
     ],
     "details": {
-      "pages": 1,
-      "word_count": 49,
+      "pages": 2,
+      "word_count": 219,
       "present_sections": [
         "Abstract",
         "Introduction",
+        "Methodology",
+        "Results",
         "Conclusion"
       ],
       "missing_sections": [
-        "Methodology",
-        "Results",
         "Discussion",
         "References"
       ]
     },
-    "timestamp": "14 May 2026 01:21 AM",
-    "filename": "ieee_missing_sections_demo.pdf"
+    "timestamp": "14 May 2026 01:37 AM",
+    "filename": "demo2.pdf"
   },
   "results": [
+    {
+      "file": "demo2.pdf",
+      "type": "IEEE Research Paper",
+      "checks": [
+        {
+          "name": "Valid IEEE Paper Format",
+          "passed": true,
+          "points": 1,
+          "message": "IEEE indicators found: 4/6"
+        },
+        {
+          "name": "Section: Abstract",
+          "passed": true,
+          "points": 1,
+          "message": "Abstract section found \u2705"
+        },
+        {
+          "name": "Section: Introduction",
+          "passed": true,
+          "points": 1,
+          "message": "Introduction section found \u2705"
+        },
+        {
+          "name": "Section: Methodology",
+          "passed": true,
+          "points": 1,
+          "message": "Methodology section found \u2705"
+        },
+        {
+          "name": "Section: Results",
+          "passed": true,
+          "points": 1,
+          "message": "Results section found \u2705"
+        },
+        {
+          "name": "Section: Discussion",
+          "passed": false,
+          "points": 0,
+          "message": "Discussion section MISSING \u274c"
+        },
+        {
+          "name": "Section: Conclusion",
+          "passed": true,
+          "points": 1,
+          "message": "Conclusion section found \u2705"
+        },
+        {
+          "name": "Section: References",
+          "passed": false,
+          "points": 0,
+          "message": "References section MISSING \u274c"
+        }
+      ],
+      "score": 6,
+      "max_score": 10,
+      "status": "FAIL",
+      "missing_sections": [
+        "Discussion",
+        "References"
+      ],
+      "present_sections": [
+        "Abstract",
+        "Introduction",
+        "Methodology",
+        "Results",
+        "Conclusion"
+      ],
+      "details": {
+        "pages": 2,
+        "word_count": 219,
+        "present_sections": [
+          "Abstract",
+          "Introduction",
+          "Methodology",
+          "Results",
+          "Conclusion"
+        ],
+        "missing_sections": [
+          "Discussion",
+          "References"
+        ]
+      },
+      "timestamp": "14 May 2026 01:37 AM",
+      "filename": "demo2.pdf"
+    },
     {
       "file": "ieee_missing_sections_demo.pdf",
       "type": "IEEE Research Paper",

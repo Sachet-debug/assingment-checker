@@ -1,0 +1,115 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 7 0 R >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Length 1495 >>
+stream
+BT
+/F1 11 Tf
+72 760 Td
+(A Lightweight DevOps Monitoring Pipeline for Automated Assignment Evaluation) Tj
+0 -20 Td
+(Sachet Demo, Department of Computer Science) Tj
+0 -20 Td
+(IEEE Student Conference Demonstration Paper) Tj
+0 -20 Td
+(DOI: 10.1109/STUDENT-DEMO.2026.002) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(Abstract) Tj
+0 -20 Td
+(Automated evaluation systems help instructors review submitted coursework with consistent criteria.) Tj
+0 -20 Td
+(This paper presents a lightweight pipeline that combines static checks, PDF validation, containerized) Tj
+0 -20 Td
+(deployment, Prometheus metrics, Grafana dashboards, and notification delivery for academic feedback.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(Index Terms) Tj
+0 -20 Td
+(DevOps, CI/CD, Prometheus, Grafana, automated grading, IEEE format.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(I. Introduction) Tj
+0 -20 Td
+(Modern classrooms often need repeatable evaluation for programming tasks and technical writing.) Tj
+0 -20 Td
+(The proposed pipeline records submission scores, exposes operational metrics, and alerts stakeholders) Tj
+0 -20 Td
+(when an IEEE-style document omits required material.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(II. Methodology) Tj
+0 -20 Td
+(The system accepts a submitted file, detects its type, extracts text from PDF documents, and applies) Tj
+0 -20 Td
+(section validation rules. The application stores the latest assessment in JSON and exposes metrics) Tj
+0 -20 Td
+(through a Flask endpoint consumed by Prometheus.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(III. Results) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Length 729 >>
+stream
+BT
+/F1 11 Tf
+72 760 Td
+(A demonstration deployment was executed with Docker Compose. The dashboard displayed the latest score,) Tj
+0 -20 Td
+(average score, and the number of absent IEEE headings. Grafana visualized the same values using) Tj
+0 -20 Td
+(Prometheus queries for instructor review.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(IV. Conclusion) Tj
+0 -20 Td
+(The pipeline provides a compact and explainable workflow for assignment checking. It helps identify) Tj
+0 -20 Td
+(structural issues in student documents and gives teachers a clear operational view of submissions.) Tj
+0 -20 Td
+() Tj
+0 -20 Td
+(Acknowledgment) Tj
+0 -20 Td
+(The authors thank the course instructor for motivating a practical DevOps monitoring demonstration.) Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000121 00000 n 
+0000000247 00000 n 
+0000000373 00000 n 
+0000000443 00000 n 
+0000001989 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2768
+%%EOF
